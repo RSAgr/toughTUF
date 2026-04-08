@@ -195,8 +195,14 @@ export default function Calendar() {
   return (
     <div className="container">
       <div className="header">
-  <button className="nav-btn" onClick={() => changeMonth("prev")} disabled={isFlipping}>
-    ←
+  <button
+    className="nav-btn"
+    onClick={() => changeMonth("prev")}
+    disabled={isFlipping}
+    aria-label="Previous month"
+  >
+    <span className="nav-arrow" aria-hidden="true">←</span>
+    <span className="nav-hint" aria-hidden="true">month--</span>
   </button>
 
   <div className="month-title-wrap">
@@ -236,8 +242,14 @@ export default function Calendar() {
     </button>
   </div>
 
-  <button className="nav-btn" onClick={() => changeMonth("next")} disabled={isFlipping}>
-    →
+  <button
+    className="nav-btn"
+    onClick={() => changeMonth("next")}
+    disabled={isFlipping}
+    aria-label="Next month"
+  >
+    <span className="nav-arrow" aria-hidden="true">→</span>
+    <span className="nav-hint" aria-hidden="true">month++</span>
   </button>
 </div>
 
