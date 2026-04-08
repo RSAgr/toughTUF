@@ -7,6 +7,11 @@ export default function CalendarGrid({
   endDate,
 }) {
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const selectionHint = !startDate
+    ? "Select a start date"
+    : !endDate
+      ? "Start selected. Now pick an end date"
+      : "Date range selected. Click any date to start again";
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
 
@@ -25,6 +30,13 @@ export default function CalendarGrid({
 
   return (
     <div className="calendar-grid-wrap">
+      <p
+        className={`selection-hint ${startDate && !endDate ? "awaiting-end" : ""}`}
+        aria-live="polite"
+      >
+        {selectionHint}
+      </p>
+
       <div className="weekday-row">
         {weekdays.map((day) => (
           <div key={day} className="weekday-cell">

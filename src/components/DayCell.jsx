@@ -18,11 +18,15 @@ export default function DayCell({
     date > startDate &&
     date < endDate;
 
+  const isAwaitingEnd = startDate && !endDate;
+
   let className = "cell";
 
   if (isStart) className += " start";
   else if (isEnd) className += " end";
   else if (isInRange) className += " range";
+
+  if (isStart && isAwaitingEnd) className += " pending-end";
 
   return (
     <div className={className} onClick={() => onClick(date)}>
