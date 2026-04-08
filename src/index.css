@@ -1,0 +1,85 @@
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.imageBox img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.cell {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
+  background: #f3f4f6;
+}
+
+.start {
+  background: #2563eb;
+  color: white;
+}
+
+.end {
+  background: #1d4ed8;
+  color: white;
+}
+
+.range {
+  background: #93c5fd;
+}
+
+.notes textarea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.layout {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.imageBox {
+  position: relative;
+}
+
+.imageBox::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+  border-radius: 10px;
+}
+
+.cell {
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.cell:hover {
+  background: #e0f2fe;
+}

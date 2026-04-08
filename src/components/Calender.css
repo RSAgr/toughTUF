@@ -1,0 +1,243 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 12px;
+}
+
+.header button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fb923c, #f97316);
+  color: #fff;
+  font-size: 1.15rem;
+  box-shadow: 0 8px 18px rgba(249, 115, 22, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.header button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.header button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.calendar-sheet {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Two faces */
+.page-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: white;
+}
+
+/* Front */
+.page-face.front {
+  z-index: 2;
+}
+
+/* Back */
+.page-face.back {
+  transform: rotateY(180deg);
+}
+
+/* Flip animation (UPDATED) */
+.calendar-wrapper.is-flipping.next .flipping-sheet {
+  transform-origin: left;
+  animation: realFlipNext 0.9s ease forwards;
+}
+
+.calendar-wrapper.is-flipping.prev .flipping-sheet {
+  transform-origin: right;
+  animation: realFlipPrev 0.9s ease forwards;
+}
+
+.month-title {
+  margin: 0;
+  min-width: 180px;
+  text-align: center;
+  letter-spacing: 0.03em;
+  animation: monthTitleIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.calendar-wrapper {
+  position: relative;
+  perspective: 1900px;
+  transform-style: preserve-3d;
+  contain: layout paint;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.12);
+}
+
+.calendar-sheet {
+  position: relative;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  width: 100%;
+  background: #fff;
+}
+
+.current-sheet {
+  position: relative;
+  z-index: 2;
+}
+
+.under-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transform: scale(0.996);
+  opacity: 0.9;
+}
+
+.calendar-wrapper.is-flipping .flipping-sheet {
+  position: relative;
+  z-index: 3;
+}
+
+.calendar-wrapper.is-flipping .flipping-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(130deg, rgba(15, 23, 42, 0.14), rgba(15, 23, 42, 0));
+}
+
+.calendar-wrapper.is-flipping .flipping-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 14% 16%, rgba(15, 23, 42, 0.3), transparent 58%);
+  opacity: 0;
+}
+
+.calendar-wrapper.is-flipping.next .flipping-sheet {
+  transform-origin: 100% 0%;
+  animation: pageTurnNext 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.calendar-wrapper.is-flipping.prev .flipping-sheet {
+  transform-origin: 0% 0%;
+  animation: pageTurnPrev 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.calendar-wrapper.is-flipping .flipping-sheet::after {
+  animation: undersideShadow 0.85s ease forwards;
+}
+
+.calendar-wrapper.is-flipping .under-sheet {
+  animation: revealUnderSheet 0.85s ease forwards;
+}
+
+@keyframes monthTitleIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageTurnNext {
+  from {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate3d(0, 0, 0);
+  }
+  60% {
+    transform: rotateX(14deg) rotateY(-108deg) rotateZ(-3deg) translate3d(0, -6px, 1px);
+  }
+  to {
+    transform: rotateX(18deg) rotateY(-170deg) rotateZ(-6deg) translate3d(0, -12px, 1px);
+  }
+}
+
+@keyframes pageTurnPrev {
+  from {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translate3d(0, 0, 0);
+  }
+  60% {
+    transform: rotateX(14deg) rotateY(108deg) rotateZ(3deg) translate3d(0, -6px, 1px);
+  }
+  to {
+    transform: rotateX(18deg) rotateY(170deg) rotateZ(6deg) translate3d(0, -12px, 1px);
+  }
+}
+
+@keyframes undersideShadow {
+  from {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 0.18;
+  }
+}
+
+@keyframes revealUnderSheet {
+  from {
+    opacity: 0.9;
+    transform: scale(0.992);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .month-title {
+    min-width: 140px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar-wrapper,
+  .calendar-sheet,
+  .month-title {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+@keyframes realFlipNext {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(-90deg);
+  }
+  100% {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes realFlipPrev {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(90deg);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
+}
