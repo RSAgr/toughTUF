@@ -1,85 +1,41 @@
-.container {
-  max-width: 900px;
-  margin: auto;
+:root {
+  color-scheme: dark;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+* {
+  box-sizing: border-box;
 }
 
-.imageBox img {
-  width: 100%;
-  border-radius: 10px;
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(249, 115, 22, 0.2), transparent 35%),
+    radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.08), transparent 28%),
+    #0a0a0a;
+  color: #ffffff;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+#root {
+  min-height: 100vh;
 }
 
-.cell {
-  padding: 10px;
+.app-shell {
+  padding: 24px 20px 32px;
+}
+
+.app-title {
+  margin: 0 0 18px;
   text-align: center;
-  cursor: pointer;
-  border-radius: 6px;
-  background: #f3f4f6;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  text-shadow: 0 0 22px rgba(249, 115, 22, 0.28);
 }
 
-.start {
-  background: #2563eb;
-  color: white;
-}
-
-.end {
-  background: #1d4ed8;
-  color: white;
-}
-
-.range {
-  background: #93c5fd;
-}
-
-.notes textarea {
-  width: 100%;
-  height: 80px;
-  margin-top: 10px;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .layout {
-    grid-template-columns: 1fr;
+  .app-shell {
+    padding: 16px 12px 24px;
   }
-}
-
-.layout {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-.imageBox {
-  position: relative;
-}
-
-.imageBox::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
-  border-radius: 10px;
-}
-
-.cell {
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: 500;
-}
-
-.cell:hover {
-  background: #e0f2fe;
 }

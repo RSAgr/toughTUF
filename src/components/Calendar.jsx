@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalendarGrid from "./CalendarGrid";
 import NotesPanel from "./NotesPanel";
 import { addMonths, subMonths, format } from "date-fns";
 import "./Calender.css";
+
+function getMonthStorageKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `month:${year}-${month}`;
+}
 
 export default function Calendar() {
   const today = new Date();
@@ -14,6 +20,13 @@ export default function Calendar() {
   const [isFlipping, setIsFlipping] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [isMonthNoteOpen, setIsMonthNoteOpen] = useState(false);
+  const [monthNoteText, setMonthNoteText] = useState(
+    localStorage.getItem(getMonthStorageKey(today)) || ""
+  );
+
+  const currentMonthKey = getMonthStorageKey(displayedMonth);
+  const currentMonthNote = monthNoteText;
   
   const handleDateClick = (date) => {
     if (!startDate || (startDate && endDate)) {
@@ -49,24 +62,116 @@ export default function Calendar() {
     }, FLIP_DURATION_MS);
   };
 
+  const syncMonthNote = (monthDate) => {
+    const key = getMonthStorageKey(monthDate);
+    setMonthNoteText(localStorage.getItem(key) || "");
+  };
+
+  useEffect(() => {
+    syncMonthNote(displayedMonth);
+  }, [displayedMonth]);
+
+  useEffect(() => {
+    if (!isMonthNoteOpen) return;
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setIsMonthNoteOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isMonthNoteOpen]);
+
   return (
     <div className="container">
       <div className="header">
-  <button onClick={() => changeMonth("prev")} disabled={isFlipping}>
+  <button className="nav-btn" onClick={() => changeMonth("prev")} disabled={isFlipping}>
     ←
   </button>
 
-  <h2
-    key={format(isFlipping && incomingMonth ? incomingMonth : displayedMonth, "yyyy-MM")}
-    className={`month-title ${flipDirection}`}
-  >
-    {format(isFlipping && incomingMonth ? incomingMonth : displayedMonth, "MMMM yyyy")}
-  </h2>
+  <div className="month-title-wrap">
+    <h2
+      key={format(isFlipping && incomingMonth ? incomingMonth : displayedMonth, "yyyy-MM")}
+      className={`month-title ${flipDirection}`}
+    >
+      {format(isFlipping && incomingMonth ? incomingMonth : displayedMonth, "MMMM yyyy")}
+    </h2>
 
-  <button onClick={() => changeMonth("next")} disabled={isFlipping}>
+    <button
+      className={`month-note-toggle ${currentMonthNote ? "has-note" : ""}`}
+      type="button"
+        onClick={() => {
+          syncMonthNote(displayedMonth);
+          setIsMonthNoteOpen((prev) => !prev);
+        }}
+      aria-label="Open monthly notes"
+      title="Monthly note"
+    >
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path
+          d="M8 3H7C5.34315 3 4 4.34315 4 6V17C4 18.6569 5.34315 20 7 20H18C19.6569 20 21 18.6569 21 17V16"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M17.5 3.5L20.5 6.5L12 15H9V12L17.5 3.5Z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <button className="nav-btn" onClick={() => changeMonth("next")} disabled={isFlipping}>
     →
   </button>
 </div>
+
+      {isMonthNoteOpen && (
+        <div
+          className="month-note-modal-overlay"
+          onClick={() => setIsMonthNoteOpen(false)}
+        >
+          <div
+            className="month-note-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Monthly notes"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="month-note-modal-head">
+              <p className="month-note-title">
+                Monthly Note: {format(displayedMonth, "MMMM yyyy")}
+              </p>
+              <button
+                type="button"
+                className="month-note-close"
+                onClick={() => setIsMonthNoteOpen(false)}
+                aria-label="Close monthly notes"
+              >
+                ×
+              </button>
+            </div>
+
+            <textarea
+              value={currentMonthNote}
+              onChange={(e) => {
+                const nextValue = e.target.value;
+                setMonthNoteText(nextValue);
+                localStorage.setItem(currentMonthKey, nextValue);
+              }}
+              placeholder="Write note for this month..."
+            />
+          </div>
+        </div>
+      )}
+
       {/* Wall Layout */}
       <div className="layout">
 
@@ -116,7 +221,10 @@ export default function Calendar() {
           </div>
           
 
-          <NotesPanel startDate={startDate} endDate={endDate} />
+          <NotesPanel
+            startDate={startDate}
+            endDate={endDate}
+          />
         </div>
 
       </div>

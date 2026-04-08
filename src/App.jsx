@@ -2,8 +2,8 @@ import Calendar from "./components/Calendar";
 
 function App() {
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Interactive Calendar</h1>
+    <div className="app-shell">
+      <h1 className="app-title">Take U Forward Calendar</h1>
       <Calendar />
     </div>
   );
