@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import CalendarGrid from "./CalendarGrid";
 import NotesPanel from "./NotesPanel";
 import { addMonths, subMonths, format } from "date-fns";
@@ -20,6 +20,8 @@ export default function Calendar() {
   const [isFlipping, setIsFlipping] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffsetX, setDragOffsetX] = useState(0);
   const [isMonthNoteOpen, setIsMonthNoteOpen] = useState(false);
   const [monthNoteText, setMonthNoteText] = useState(
     localStorage.getItem(getMonthStorageKey(today)) || ""
@@ -28,6 +30,54 @@ export default function Calendar() {
   const currentMonthKey = getMonthStorageKey(displayedMonth);
   const currentMonthNote = monthNoteText;
   const displayForLabel = isFlipping && incomingMonth ? incomingMonth : displayedMonth;
+  const DRAG_DISTANCE_THRESHOLD = 75;
+  const SWIPE_VELOCITY_THRESHOLD = 0.55;
+  const dragStartXRef = useRef(0);
+  const lastDragXRef = useRef(0);
+  const lastDragTimeRef = useRef(0);
+  const dragVelocityRef = useRef(0);
+  const didDragRef = useRef(false);
+
+  const dragIncomingMonth = useMemo(() => {
+    if (!isDragging || dragOffsetX === 0) return null;
+    return dragOffsetX < 0
+      ? addMonths(displayedMonth, 1)
+      : subMonths(displayedMonth, 1);
+  }, [displayedMonth, isDragging, dragOffsetX]);
+
+  const renderCalendarPage = (monthDate) => (
+    <div className="layout">
+      <div className="imageBox">
+        <img
+          src="https://picsum.photos/400/300"
+          alt="calendar"
+        />
+
+        <div className="hero-month-badge">
+          <span className="hero-year">{format(monthDate, "yyyy")}</span>
+          <span className="hero-month">{format(monthDate, "MMMM")}</span>
+        </div>
+      </div>
+
+      <div className="paper-body">
+        <div className="notes-column">
+          <NotesPanel
+            startDate={startDate}
+            endDate={endDate}
+          />
+        </div>
+
+        <div className="dates-column">
+          <CalendarGrid
+            currentMonth={monthDate}
+            onDateClick={handleDateClick}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        </div>
+      </div>
+    </div>
+  );
   
   const handleDateClick = (date) => {
     if (!startDate || (startDate && endDate)) {
@@ -68,6 +118,59 @@ export default function Calendar() {
     setMonthNoteText(localStorage.getItem(key) || "");
   };
 
+  const beginDrag = (x) => {
+    if (isFlipping || isMonthNoteOpen) return;
+    const now = performance.now();
+    dragStartXRef.current = x;
+    lastDragXRef.current = x;
+    lastDragTimeRef.current = now;
+    dragVelocityRef.current = 0;
+    didDragRef.current = false;
+    setDragOffsetX(0);
+    setIsDragging(true);
+  };
+
+  const updateDrag = (x) => {
+    if (!isDragging) return;
+
+    const now = performance.now();
+    const deltaX = x - lastDragXRef.current;
+    const deltaT = now - lastDragTimeRef.current;
+
+    if (deltaT > 0) {
+      dragVelocityRef.current = deltaX / deltaT;
+    }
+
+    lastDragXRef.current = x;
+    lastDragTimeRef.current = now;
+
+    const rawDelta = x - dragStartXRef.current;
+    const clampedDelta = Math.max(-170, Math.min(170, rawDelta));
+
+    if (Math.abs(clampedDelta) > 8) {
+      didDragRef.current = true;
+    }
+
+    setDragOffsetX(clampedDelta);
+  };
+
+  const endDrag = () => {
+    if (!isDragging) return;
+
+    const finalOffset = dragOffsetX;
+    const finalVelocity = dragVelocityRef.current;
+    setIsDragging(false);
+    setDragOffsetX(0);
+
+    const crossedDistance = Math.abs(finalOffset) > DRAG_DISTANCE_THRESHOLD;
+    const crossedVelocity = Math.abs(finalVelocity) > SWIPE_VELOCITY_THRESHOLD;
+
+    if (crossedDistance || crossedVelocity) {
+      const directionSource = crossedDistance ? finalOffset : finalVelocity;
+      changeMonth(directionSource < 0 ? "next" : "prev");
+    }
+  };
+
   useEffect(() => {
     syncMonthNote(displayedMonth);
   }, [displayedMonth]);
@@ -84,6 +187,10 @@ export default function Calendar() {
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isMonthNoteOpen]);
+
+  const dragRotation = Math.max(-14, Math.min(14, dragOffsetX / 10));
+  const dragShift = dragOffsetX * 0.18;
+  const dragDirectionClass = dragOffsetX < 0 ? "drag-next" : "drag-prev";
 
   return (
     <div className="container">
@@ -173,68 +280,47 @@ export default function Calendar() {
         </div>
       )}
 
-      {/* Wall Layout */}
-      <div className="layout">
-
-        {/* Image Section */}
-        <div className="imageBox">
-          <img
-            src="https://picsum.photos/400/300"
-            alt="calendar"
-          />
-
-          <div className="hero-month-badge">
-            <span className="hero-year">{format(displayForLabel, "yyyy")}</span>
-            <span className="hero-month">{format(displayForLabel, "MMMM")}</span>
+      <div
+        className={`sheet-stage ${isFlipping ? `is-flipping ${flipDirection}` : ""} ${isDragging ? "is-dragging" : ""}`}
+        onPointerDown={(event) => {
+          if (event.button !== 0) return;
+          const target = event.target;
+          if (
+            target instanceof Element &&
+            target.closest("button, textarea, input, select, a, .cell, .grid, .weekday-row, .selection-hint")
+          ) {
+            return;
+          }
+          event.currentTarget.setPointerCapture?.(event.pointerId);
+          beginDrag(event.clientX);
+        }}
+        onPointerMove={(event) => updateDrag(event.clientX)}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onClickCapture={(event) => {
+          if (didDragRef.current) {
+            event.preventDefault();
+            event.stopPropagation();
+            didDragRef.current = false;
+          }
+        }}
+      >
+        {(isFlipping && incomingMonth) || (isDragging && dragIncomingMonth) ? (
+          <div className="sheet-layer under-layer">
+            {renderCalendarPage(incomingMonth || dragIncomingMonth)}
           </div>
+        ) : null}
+
+        <div
+          className={`sheet-layer top-layer ${isFlipping ? "flipping-layer" : ""} ${isDragging ? dragDirectionClass : ""}`}
+          style={
+            isDragging && !isFlipping
+              ? { transform: `translateX(${dragShift}px) rotateY(${dragRotation}deg)` }
+              : undefined
+          }
+        >
+          {renderCalendarPage(displayedMonth)}
         </div>
-
-        <div className="paper-body">
-          <div className="notes-column">
-            <NotesPanel
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </div>
-
-          <div className="dates-column">
-            <div className={`calendar-wrapper ${isFlipping ? `is-flipping ${flipDirection}` : ""}`}>
-              {isFlipping && incomingMonth && (
-                <div className="calendar-sheet under-sheet">
-                  <CalendarGrid
-                    currentMonth={incomingMonth}
-                    onDateClick={handleDateClick}
-                    startDate={startDate}
-                    endDate={endDate}
-                  />
-                </div>
-              )}
-
-              <div className={`calendar-sheet ${isFlipping ? "flipping-sheet" : "current-sheet"}`}>
-                <div className="page-face front">
-                  <CalendarGrid
-                    currentMonth={displayedMonth}
-                    onDateClick={handleDateClick}
-                    startDate={startDate}
-                    endDate={endDate}
-                  />
-                </div>
-
-                {isFlipping && incomingMonth && (
-                  <div className="page-face back">
-                    <CalendarGrid
-                      currentMonth={incomingMonth}
-                      onDateClick={handleDateClick}
-                      startDate={startDate}
-                      endDate={endDate}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   );
