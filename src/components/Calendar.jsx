@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CalendarGrid from "./CalendarGrid";
 import NotesPanel from "./NotesPanel";
+import ConsistencyTree from "./ConsistencyTree";
 import { addMonths, subMonths, format } from "date-fns";
 import "./Calender.css";
 
@@ -334,14 +335,17 @@ export default function Calendar() {
           </div>
         </div>
 
-        <aside className="motivation-card">
-          <p className="motivation-quote-mark">"</p>
-          <p className="motivation-quote">
-            Consistency beats intensity. Solve one problem every day and let compound growth do the rest.
-          </p>
-          <p className="motivation-author">- Striver</p>
-          <img src="/striver.jpeg" alt="Striver" className="motivation-image" />
-        </aside>
+        <div className="right-sidebar">
+            <aside className="motivation-card">
+              <p className="motivation-quote-mark">"</p>
+              <p className="motivation-quote">
+                Consistency beats intensity. Solve one problem every day and let compound growth do the rest.
+              </p>
+              <p className="motivation-author">- Striver</p>
+              <img src="/striver.jpeg" alt="Striver" className="motivation-image" />
+            </aside>
+            <ConsistencyTree />
+        </div>
       </div>
     </div>
   );

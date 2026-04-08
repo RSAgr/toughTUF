@@ -192,6 +192,12 @@
 
 /* Two faces */
 .page-face {
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 280px;
+}
   width: 100%;
   backface-visibility: hidden;
   background: white;
@@ -676,6 +682,13 @@
   align-items: start;
 }
 
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 280px;
+}
+
 .motivation-card {
   background: linear-gradient(160deg, #fff9f5, #fff2e8);
   border: 1px solid rgba(249, 115, 22, 0.35);
@@ -1066,6 +1079,12 @@
   }
 
   .motivation-card {
+    max-width: 480px;
+    justify-self: center;
+  }
+
+  .right-sidebar {
+    width: 100%;
     max-width: 480px;
     justify-self: center;
   }

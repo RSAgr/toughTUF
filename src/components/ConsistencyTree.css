@@ -1,0 +1,202 @@
+/* Consistency Tree Card */
+.consistency-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--tuf-white) 0%, #f5f5f5 100%);
+  border-radius: 12px;
+  border: 2px solid var(--tuf-orange);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.consistency-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--tuf-orange), var(--tuf-orange-strong));
+  opacity: 0.8;
+}
+
+.consistency-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(245, 127, 23, 0.2);
+}
+
+.consistency-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--tuf-black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.consistency-level {
+  background: linear-gradient(135deg, var(--tuf-orange), var(--tuf-orange-strong));
+  color: var(--tuf-white);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* Tree Visualization */
+.tree-visualization {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  background: radial-gradient(ellipse at center, rgba(245, 127, 23, 0.05) 0%, transparent 70%);
+  border-radius: 8px;
+  min-height: 200px;
+}
+
+.tree-svg {
+  width: 120px;
+  height: 180px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Tree Trunk */
+.tree-trunk {
+  fill: #8B6F47;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+/* Tree Roots */
+.tree-root {
+  stroke: #8B6F47;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+
+/* Tree Foliage - grows in segments */
+.tree-foliage {
+  fill: var(--tuf-orange);
+  transition: opacity 0.4s ease-out;
+  filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.15));
+}
+
+/* Consistency Stats */
+.consistency-stats {
+  text-align: center;
+  padding: 12px;
+  background: rgba(245, 127, 23, 0.08);
+  border-radius: 6px;
+  border-left: 3px solid var(--tuf-orange);
+}
+
+.consistency-message {
+  margin: 0;
+  color: var(--tuf-black);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+/* Buttons */
+.consistency-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.btn-grow,
+.btn-shrink {
+  padding: 10px 14px;
+  border: 2px solid;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-grow {
+  background: var(--tuf-orange);
+  color: var(--tuf-white);
+  border-color: var(--tuf-orange-strong);
+  box-shadow: 0 2px 6px rgba(245, 127, 23, 0.3);
+}
+
+.btn-grow:hover {
+  background: var(--tuf-orange-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 127, 23, 0.4);
+}
+
+.btn-grow:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(245, 127, 23, 0.3);
+}
+
+.btn-shrink {
+  background: var(--tuf-white);
+  color: var(--tuf-black);
+  border-color: #d1d5db;
+}
+
+.btn-shrink:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  transform: translateY(-2px);
+}
+
+.btn-shrink:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  /* Removed broken media query section */
+}
+
+@media (max-width: 768px) {
+  .consistency-card {
+    margin-top: 12px;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .consistency-header h3 {
+    font-size: 0.9rem;
+  }
+
+  .tree-visualization {
+    min-height: 160px;
+    padding: 16px 0;
+  }
+
+  .tree-svg {
+    width: 100px;
+    height: 150px;
+  }
+
+  .consistency-message {
+    font-size: 0.85rem;
+  }
+
+  .btn-grow,
+  .btn-shrink {
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+}
