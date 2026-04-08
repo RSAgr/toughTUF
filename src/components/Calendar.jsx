@@ -27,6 +27,7 @@ export default function Calendar() {
 
   const currentMonthKey = getMonthStorageKey(displayedMonth);
   const currentMonthNote = monthNoteText;
+  const displayForLabel = isFlipping && incomingMonth ? incomingMonth : displayedMonth;
   
   const handleDateClick = (date) => {
     if (!startDate || (startDate && endDate)) {
@@ -93,10 +94,10 @@ export default function Calendar() {
 
   <div className="month-title-wrap">
     <h2
-      key={format(isFlipping && incomingMonth ? incomingMonth : displayedMonth, "yyyy-MM")}
+      key={format(displayForLabel, "yyyy-MM")}
       className={`month-title ${flipDirection}`}
     >
-      {format(isFlipping && incomingMonth ? incomingMonth : displayedMonth, "MMMM yyyy")}
+      {format(displayForLabel, "MMMM yyyy")}
     </h2>
 
     <button
@@ -181,50 +182,57 @@ export default function Calendar() {
             src="https://picsum.photos/400/300"
             alt="calendar"
           />
+
+          <div className="hero-month-badge">
+            <span className="hero-year">{format(displayForLabel, "yyyy")}</span>
+            <span className="hero-month">{format(displayForLabel, "MMMM")}</span>
+          </div>
         </div>
 
-        {/* Calendar + Notes */}
-        <div>
-          <div className={`calendar-wrapper ${isFlipping ? `is-flipping ${flipDirection}` : ""}`}>
-            {isFlipping && incomingMonth && (
-              <div className="calendar-sheet under-sheet">
-                <CalendarGrid
-                  currentMonth={incomingMonth}
-                  onDateClick={handleDateClick}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              </div>
-            )}
-
-            <div className={`calendar-sheet ${isFlipping ? "flipping-sheet" : "current-sheet"}`}>
-  <div className="page-face front">
-    <CalendarGrid
-      currentMonth={displayedMonth}
-      onDateClick={handleDateClick}
-      startDate={startDate}
-      endDate={endDate}
-    />
-  </div>
-
-  {isFlipping && incomingMonth && (
-    <div className="page-face back">
-      <CalendarGrid
-        currentMonth={incomingMonth}
-        onDateClick={handleDateClick}
-        startDate={startDate}
-        endDate={endDate}
-      />
-    </div>
-  )}
-</div>
+        <div className="paper-body">
+          <div className="notes-column">
+            <NotesPanel
+              startDate={startDate}
+              endDate={endDate}
+            />
           </div>
-          
 
-          <NotesPanel
-            startDate={startDate}
-            endDate={endDate}
-          />
+          <div className="dates-column">
+            <div className={`calendar-wrapper ${isFlipping ? `is-flipping ${flipDirection}` : ""}`}>
+              {isFlipping && incomingMonth && (
+                <div className="calendar-sheet under-sheet">
+                  <CalendarGrid
+                    currentMonth={incomingMonth}
+                    onDateClick={handleDateClick}
+                    startDate={startDate}
+                    endDate={endDate}
+                  />
+                </div>
+              )}
+
+              <div className={`calendar-sheet ${isFlipping ? "flipping-sheet" : "current-sheet"}`}>
+                <div className="page-face front">
+                  <CalendarGrid
+                    currentMonth={displayedMonth}
+                    onDateClick={handleDateClick}
+                    startDate={startDate}
+                    endDate={endDate}
+                  />
+                </div>
+
+                {isFlipping && incomingMonth && (
+                  <div className="page-face back">
+                    <CalendarGrid
+                      currentMonth={incomingMonth}
+                      onDateClick={handleDateClick}
+                      startDate={startDate}
+                      endDate={endDate}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>

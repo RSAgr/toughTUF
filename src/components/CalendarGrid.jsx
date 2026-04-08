@@ -42,8 +42,11 @@ export default function CalendarGrid({
       </p>
 
       <div className="weekday-row">
-        {weekdays.map((day) => (
-          <div key={day} className="weekday-cell">
+        {weekdays.map((day, index) => (
+          <div
+            key={day}
+            className={`weekday-cell ${index === 0 ? "sun" : ""} ${index === 6 ? "sat" : ""}`.trim()}
+          >
             {day}
           </div>
         ))}

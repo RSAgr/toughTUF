@@ -18,6 +18,8 @@ export default function DayCell({
     date > startDate &&
     date < endDate;
 
+  const dayOfWeek = date.getDay();
+
   const isAwaitingEnd = startDate && !endDate;
 
   let className = "cell";
@@ -25,6 +27,9 @@ export default function DayCell({
   if (isStart) className += " start";
   else if (isEnd) className += " end";
   else if (isInRange) className += " range";
+
+  if (dayOfWeek === 0) className += " sun";
+  else if (dayOfWeek === 6) className += " sat";
 
   if (isStart && isAwaitingEnd) className += " pending-end";
 

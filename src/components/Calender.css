@@ -611,3 +611,276 @@
   border-color: var(--tuf-orange);
   box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
+
+/* Real calendar look overrides */
+.container {
+  max-width: 860px;
+  padding-top: 8px;
+}
+
+.header {
+  margin-bottom: 10px;
+}
+
+.month-title {
+  font-size: 0.95rem;
+  letter-spacing: 0.11em;
+}
+
+.layout {
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #fdfdfd;
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.42);
+}
+
+.imageBox {
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  height: min(48vw, 420px);
+  min-height: 260px;
+}
+
+.imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(0.96);
+}
+
+.imageBox::before,
+.imageBox::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  height: 31%;
+  width: 44%;
+  background: #2c9fd7;
+}
+
+.imageBox::before {
+  left: -2px;
+  clip-path: polygon(0 38%, 100% 100%, 0 100%);
+}
+
+.imageBox::after {
+  right: -2px;
+  clip-path: polygon(0 100%, 100% 38%, 100% 100%);
+}
+
+.hero-month-badge {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  color: #ffffff;
+  text-align: right;
+  z-index: 2;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.38);
+}
+
+.hero-year {
+  display: block;
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.hero-month {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.paper-body {
+  display: grid;
+  grid-template-columns: 0.42fr 0.58fr;
+  gap: 20px;
+  padding: 18px 20px 22px;
+  background: #ffffff;
+}
+
+.notes-column,
+.dates-column {
+  min-width: 0;
+}
+
+.dates-column {
+  align-self: end;
+}
+
+.dates-column .calendar-wrapper,
+.dates-column .calendar-sheet,
+.dates-column .page-face {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.dates-column .calendar-wrapper {
+  overflow: visible;
+  perspective: 1500px;
+}
+
+.calendar-grid-wrap {
+  padding-top: 0;
+}
+
+.selection-hint {
+  padding: 0 0 6px;
+  font-size: 0.78rem;
+  color: #8b8b8b;
+}
+
+.weekday-row,
+.grid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.weekday-row {
+  gap: 6px;
+  padding-bottom: 6px;
+}
+
+.weekday-cell {
+  font-size: 0.72rem;
+  color: #6b7280;
+  letter-spacing: 0.05em;
+}
+
+.weekday-cell.sat,
+.weekday-cell.sun {
+  color: #2c9fd7;
+}
+
+.grid {
+  gap: 6px;
+  padding-bottom: 0;
+}
+
+.cell {
+  min-height: 46px;
+  aspect-ratio: auto;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #232323;
+  font-weight: 700;
+  font-size: 1.08rem;
+}
+
+.cell.empty {
+  opacity: 0.14;
+  border-color: transparent;
+}
+
+.cell:not(.empty):hover {
+  transform: none;
+  background: #f1f5f9;
+  border-color: #dbe5ef;
+}
+
+.cell.sat,
+.cell.sun {
+  color: #2c9fd7;
+}
+
+.cell.start,
+.cell.end {
+  color: #ffffff;
+  background: #f97316;
+  border-color: #f97316;
+}
+
+.cell.range {
+  background: #fff3e8;
+  color: #c2410c;
+  border-color: #ffd2b3;
+}
+
+.notes {
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.notes h3 {
+  margin: 4px 0 10px;
+  color: #6b7280;
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.note-section {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.note-section-title,
+.notes p {
+  color: #8b8b8b;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.notes textarea {
+  min-height: 280px;
+  padding: 6px 4px 6px;
+  border: 0;
+  border-radius: 0;
+  color: #2b2b2b;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 25px,
+      #d1d5db 25px,
+      #d1d5db 26px
+    );
+  line-height: 26px;
+  font-size: 0.95rem;
+}
+
+.notes textarea:focus {
+  border: 0;
+  box-shadow: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 25px,
+      #2c9fd7 25px,
+      #2c9fd7 26px
+    );
+}
+
+@media (max-width: 768px) {
+  .paper-body {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 14px 14px 16px;
+  }
+
+  .hero-year {
+    font-size: 1.45rem;
+  }
+
+  .hero-month {
+    font-size: 1.5rem;
+  }
+
+  .notes textarea {
+    min-height: 170px;
+  }
+}
