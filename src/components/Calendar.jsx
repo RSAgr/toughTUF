@@ -108,14 +108,15 @@ export default function Calendar() {
 
     window.setTimeout(() => {
       setDisplayedMonth(nextMonth);
+      setMonthNoteText(readMonthNote(nextMonth));
       setIncomingMonth(null);
       setIsFlipping(false);
     }, FLIP_DURATION_MS);
   };
 
-  const syncMonthNote = (monthDate) => {
+  const readMonthNote = (monthDate) => {
     const key = getMonthStorageKey(monthDate);
-    setMonthNoteText(localStorage.getItem(key) || "");
+    return localStorage.getItem(key) || "";
   };
 
   const beginDrag = (x) => {
@@ -171,9 +172,6 @@ export default function Calendar() {
     }
   };
 
-  useEffect(() => {
-    syncMonthNote(displayedMonth);
-  }, [displayedMonth]);
 
   useEffect(() => {
     if (!isMonthNoteOpen) return;
@@ -202,7 +200,7 @@ export default function Calendar() {
     aria-label="Previous month"
   >
     <span className="nav-arrow" aria-hidden="true">←</span>
-    <span className="nav-hint" aria-hidden="true">month--</span>
+    <span className="nav-hint" aria-hidden="true">MONTH--</span>
   </button>
 
   <div className="month-title-wrap">
@@ -217,7 +215,7 @@ export default function Calendar() {
       className={`month-note-toggle ${currentMonthNote ? "has-note" : ""}`}
       type="button"
         onClick={() => {
-          syncMonthNote(displayedMonth);
+          setMonthNoteText(readMonthNote(displayedMonth));
           setIsMonthNoteOpen((prev) => !prev);
         }}
       aria-label="Open monthly notes"
@@ -249,7 +247,7 @@ export default function Calendar() {
     aria-label="Next month"
   >
     <span className="nav-arrow" aria-hidden="true">→</span>
-    <span className="nav-hint" aria-hidden="true">month++</span>
+    <span className="nav-hint" aria-hidden="true">MONTH++</span>
   </button>
 </div>
 
@@ -292,47 +290,58 @@ export default function Calendar() {
         </div>
       )}
 
-      <div
-        className={`sheet-stage ${isFlipping ? `is-flipping ${flipDirection}` : ""} ${isDragging ? "is-dragging" : ""}`}
-        onPointerDown={(event) => {
-          if (event.button !== 0) return;
-          const target = event.target;
-          if (
-            target instanceof Element &&
-            target.closest("button, textarea, input, select, a, .cell, .grid, .weekday-row, .selection-hint")
-          ) {
-            return;
-          }
-          event.currentTarget.setPointerCapture?.(event.pointerId);
-          beginDrag(event.clientX);
-        }}
-        onPointerMove={(event) => updateDrag(event.clientX)}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        onClickCapture={(event) => {
-          if (didDragRef.current) {
-            event.preventDefault();
-            event.stopPropagation();
-            didDragRef.current = false;
-          }
-        }}
-      >
-        {(isFlipping && incomingMonth) || (isDragging && dragIncomingMonth) ? (
-          <div className="sheet-layer under-layer">
-            {renderCalendarPage(incomingMonth || dragIncomingMonth)}
-          </div>
-        ) : null}
-
+      <div className="calendar-board">
         <div
-          className={`sheet-layer top-layer ${isFlipping ? "flipping-layer" : ""} ${isDragging ? dragDirectionClass : ""}`}
-          style={
-            isDragging && !isFlipping
-              ? { transform: `translateX(${dragShift}px) rotateY(${dragRotation}deg)` }
-              : undefined
-          }
+          className={`sheet-stage ${isFlipping ? `is-flipping ${flipDirection}` : ""} ${isDragging ? "is-dragging" : ""}`}
+          onPointerDown={(event) => {
+            if (event.button !== 0) return;
+            const target = event.target;
+            if (
+              target instanceof Element &&
+              target.closest("button, textarea, input, select, a, .cell, .grid, .weekday-row, .selection-hint")
+            ) {
+              return;
+            }
+            event.currentTarget.setPointerCapture?.(event.pointerId);
+            beginDrag(event.clientX);
+          }}
+          onPointerMove={(event) => updateDrag(event.clientX)}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          onClickCapture={(event) => {
+            if (didDragRef.current) {
+              event.preventDefault();
+              event.stopPropagation();
+              didDragRef.current = false;
+            }
+          }}
         >
-          {renderCalendarPage(displayedMonth)}
+          {(isFlipping && incomingMonth) || (isDragging && dragIncomingMonth) ? (
+            <div className="sheet-layer under-layer">
+              {renderCalendarPage(incomingMonth || dragIncomingMonth)}
+            </div>
+          ) : null}
+
+          <div
+            className={`sheet-layer top-layer ${isFlipping ? "flipping-layer" : ""} ${isDragging ? dragDirectionClass : ""}`}
+            style={
+              isDragging && !isFlipping
+                ? { transform: `translateX(${dragShift}px) rotateY(${dragRotation}deg)` }
+                : undefined
+            }
+          >
+            {renderCalendarPage(displayedMonth)}
+          </div>
         </div>
+
+        <aside className="motivation-card">
+          <p className="motivation-quote-mark">"</p>
+          <p className="motivation-quote">
+            Consistency beats intensity. Solve one problem every day and let compound growth do the rest.
+          </p>
+          <p className="motivation-author">- Striver</p>
+          <img src="/striver.jpeg" alt="Striver" className="motivation-image" />
+        </aside>
       </div>
     </div>
   );
