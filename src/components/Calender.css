@@ -36,10 +36,7 @@
 
 /* Two faces */
 .page-face {
-  position: absolute;
-  inset: 0;
   width: 100%;
-  min-height: 380px;
   backface-visibility: hidden;
   background: white;
   display: flex;
@@ -48,11 +45,14 @@
 
 /* Front */
 .page-face.front {
+  position: relative;
   z-index: 2;
 }
 
 /* Back */
 .page-face.back {
+  position: absolute;
+  inset: 0;
   transform: rotateY(180deg);
 }
 
@@ -92,7 +92,6 @@
   transform-style: preserve-3d;
   will-change: transform, opacity;
   width: 100%;
-  min-height: 380px;
   background: #fff;
 }
 
@@ -297,7 +296,27 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
-  padding: 16px;
+  padding: 0 16px 16px;
+}
+
+.calendar-grid-wrap {
+  padding-top: 10px;
+}
+
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  padding: 0 16px 10px;
+}
+
+.weekday-cell {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
 }
 
 .cell {

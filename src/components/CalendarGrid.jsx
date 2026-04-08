@@ -6,6 +6,7 @@ export default function CalendarGrid({
   startDate,
   endDate,
 }) {
+  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
 
@@ -23,16 +24,26 @@ export default function CalendarGrid({
   }
 
   return (
-    <div className="grid">
-      {days.map((date, index) => (
-        <DayCell
-          key={index}
-          date={date}
-          onClick={onDateClick}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      ))}
+    <div className="calendar-grid-wrap">
+      <div className="weekday-row">
+        {weekdays.map((day) => (
+          <div key={day} className="weekday-cell">
+            {day}
+          </div>
+        ))}
+      </div>
+
+      <div className="grid">
+        {days.map((date, index) => (
+          <DayCell
+            key={index}
+            date={date}
+            onClick={onDateClick}
+            startDate={startDate}
+            endDate={endDate}
+          />
+        ))}
+      </div>
     </div>
   );
 }
