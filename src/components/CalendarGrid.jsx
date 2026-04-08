@@ -28,6 +28,10 @@ export default function CalendarGrid({
     days.push(new Date(year, month, i));
   }
 
+  while (days.length < 42) {
+    days.push(null);
+  }
+
   return (
     <div className="calendar-grid-wrap">
       <p
