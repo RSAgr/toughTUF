@@ -38,8 +38,12 @@
 .page-face {
   position: absolute;
   inset: 0;
+  width: 100%;
+  min-height: 380px;
   backface-visibility: hidden;
   background: white;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Front */
@@ -88,6 +92,7 @@
   transform-style: preserve-3d;
   will-change: transform, opacity;
   width: 100%;
+  min-height: 380px;
   background: #fff;
 }
 
@@ -240,4 +245,149 @@
   100% {
     transform: rotateY(180deg);
   }
+}
+
+.flipping-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.25),
+    transparent 40%
+  );
+  opacity: 0;
+  animation: shadowMove 0.9s ease forwards;
+}
+
+@keyframes shadowMove {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+/* Container and Layout Styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.imageBox {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.15);
+}
+
+.imageBox img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Grid and Cell Styles */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  padding: 16px;
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: #f1f5f9;
+  border: 2px solid transparent;
+}
+
+.cell.empty {
+  cursor: default;
+  background: transparent;
+  pointer-events: none;
+}
+
+.cell:not(.empty):hover {
+  background: #e2e8f0;
+  transform: scale(1.05);
+}
+
+.cell.start,
+.cell.end {
+  background: linear-gradient(135deg, #fb923c, #f97316);
+  color: white;
+  border-color: #f97316;
+}
+
+.cell.range {
+  background: #fed7aa;
+  color: #7c2d12;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    gap: 6px;
+    padding: 12px;
+  }
+
+  .cell {
+    font-size: 0.9rem;
+  }
+}
+
+/* Notes Panel Styles */
+.notes {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.notes h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.notes p {
+  margin: 0 0 12px 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.notes textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.notes textarea:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }

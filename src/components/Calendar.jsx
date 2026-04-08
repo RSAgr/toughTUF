@@ -6,7 +6,7 @@ import "./Calender.css";
 
 export default function Calendar() {
   const today = new Date();
-  const FLIP_DURATION_MS = 720;
+  const FLIP_DURATION_MS = 900;
 
   const [displayedMonth, setDisplayedMonth] = useState(today);
   const [incomingMonth, setIncomingMonth] = useState(null);
@@ -93,13 +93,26 @@ export default function Calendar() {
             )}
 
             <div className={`calendar-sheet ${isFlipping ? "flipping-sheet" : "current-sheet"}`}>
-              <CalendarGrid
-                currentMonth={displayedMonth}
-                onDateClick={handleDateClick}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </div>
+  <div className="page-face front">
+    <CalendarGrid
+      currentMonth={displayedMonth}
+      onDateClick={handleDateClick}
+      startDate={startDate}
+      endDate={endDate}
+    />
+  </div>
+
+  {isFlipping && incomingMonth && (
+    <div className="page-face back">
+      <CalendarGrid
+        currentMonth={incomingMonth}
+        onDateClick={handleDateClick}
+        startDate={startDate}
+        endDate={endDate}
+      />
+    </div>
+  )}
+</div>
           </div>
           
 
