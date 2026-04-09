@@ -39,3 +39,10 @@ npm run preview
 
 - Run `npm run lint` to check the codebase with ESLint.
 - The app stores month notes and tree progress in localStorage.
+
+## Future Scopes
+
+- Exploring built-in animations (Shadcn)
+- The Company bubbles ain't impressive 
+- I had a better SVG for tree, but but couldn't use for continuous growth. Need to find some alternative design in which leaves can be smoothly added.
+- Images used are heavy for loading, will be easily optimized

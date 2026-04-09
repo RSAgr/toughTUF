@@ -40,7 +40,7 @@ function App() {
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const pointerRange = 320;
-    const minSeparation = 74;
+    const minSeparation = 72;
 
     const getCenterZone = (width, height) => ({
       cx: width * 0.5,
@@ -95,8 +95,8 @@ function App() {
       const cellHeight = availableHeight / rows;
 
       objectsRef.current = floatingCompanies.map((company, index) => {
-        const speedX = randomBetween(-0.65, 0.65) || 0.34;
-        const speedY = randomBetween(-0.55, 0.55) || -0.3;
+        const speedX = randomBetween(-0.42, 0.42) || 0.22;
+        const speedY = randomBetween(-0.36, 0.36) || -0.2;
         const size = 24 + company.label.length * 2.4;
 
         const column = index % columns;
@@ -139,13 +139,13 @@ function App() {
 
     const clampSpeed = (obj) => {
       const speed = Math.hypot(obj.vx, obj.vy);
-      if (speed < 0.12) {
-        obj.vx += randomBetween(-0.25, 0.25);
-        obj.vy += randomBetween(-0.25, 0.25);
+      if (speed < 0.08) {
+        obj.vx += randomBetween(-0.16, 0.16);
+        obj.vy += randomBetween(-0.16, 0.16);
       }
-      if (speed > 1.5) {
-        obj.vx *= 0.92;
-        obj.vy *= 0.92;
+      if (speed > 1.05) {
+        obj.vx *= 0.9;
+        obj.vy *= 0.9;
       }
     };
 
@@ -172,7 +172,7 @@ function App() {
           const nx = dx / distance;
           const ny = dy / distance;
           const overlap = minSeparation - distance;
-          const force = overlap * 0.016;
+          const force = overlap * 0.01;
 
           a.vx += nx * force;
           a.vy += ny * force;
@@ -180,7 +180,7 @@ function App() {
           b.vy -= ny * force;
 
           // Positional correction to avoid stacking.
-          const correction = overlap * 0.42;
+          const correction = overlap * 0.3;
           a.x += nx * correction;
           a.y += ny * correction;
           b.x -= nx * correction;
@@ -192,44 +192,44 @@ function App() {
         const cursor = cursorRef.current;
 
         if (cursor.active) {
-          const futureCursorX = cursor.x + cursor.vx * 9;
-          const futureCursorY = cursor.y + cursor.vy * 9;
+          const futureCursorX = cursor.x + cursor.vx * 7;
+          const futureCursorY = cursor.y + cursor.vy * 7;
           const dx = obj.x - futureCursorX;
           const dy = obj.y - futureCursorY;
           const distance = Math.hypot(dx, dy) || 1;
 
           if (distance < pointerRange) {
             const proximity = (pointerRange - distance) / pointerRange;
-            const repelStrength = proximity * proximity * 1.9;
+            const repelStrength = proximity * proximity * 1.2;
             obj.vx += (dx / distance) * repelStrength;
             obj.vy += (dy / distance) * repelStrength;
 
             // Instant escape impulse when cursor gets very close.
             if (distance < 130) {
               const panicBoost = (130 - distance) / 130;
-              obj.vx += (dx / distance) * (0.8 + panicBoost * 1.6);
-              obj.vy += (dy / distance) * (0.8 + panicBoost * 1.6);
+              obj.vx += (dx / distance) * (0.45 + panicBoost * 0.9);
+              obj.vy += (dy / distance) * (0.45 + panicBoost * 0.9);
             }
 
             // Hard snap-away safeguard if cursor gets on top of a bubble.
             if (distance < 56) {
-              obj.x += (dx / distance) * 22;
-              obj.y += (dy / distance) * 22;
+              obj.x += (dx / distance) * 14;
+              obj.y += (dy / distance) * 14;
             }
           }
         }
 
-        obj.vx += randomBetween(-0.008, 0.008);
-        obj.vy += randomBetween(-0.008, 0.008);
-        obj.vx *= 0.996;
-        obj.vy *= 0.996;
+        obj.vx += randomBetween(-0.005, 0.005);
+        obj.vy += randomBetween(-0.005, 0.005);
+        obj.vx *= 0.992;
+        obj.vy *= 0.992;
 
         clampSpeed(obj);
 
         obj.x += obj.vx;
         obj.y += obj.vy;
-        obj.rotZPhase += obj.rotZSpeed;
-        obj.wobblePhase += obj.wobbleSpeed;
+        obj.rotZPhase += obj.rotZSpeed * 0.85;
+        obj.wobblePhase += obj.wobbleSpeed * 0.85;
 
         if (isInsideCenterZone(obj.x, obj.y, obj.size, width, height)) {
           pushOutOfCenter(obj, width, height, 0.22);
@@ -239,19 +239,19 @@ function App() {
 
         if (obj.x < edgePadding) {
           obj.x = edgePadding;
-          obj.vx = Math.abs(obj.vx);
+          obj.vx = Math.abs(obj.vx) * 0.9;
         }
         if (obj.x > width - edgePadding) {
           obj.x = width - edgePadding;
-          obj.vx = -Math.abs(obj.vx);
+          obj.vx = -Math.abs(obj.vx) * 0.9;
         }
         if (obj.y < edgePadding) {
           obj.y = edgePadding;
-          obj.vy = Math.abs(obj.vy);
+          obj.vy = Math.abs(obj.vy) * 0.9;
         }
         if (obj.y > height - edgePadding) {
           obj.y = height - edgePadding;
-          obj.vy = -Math.abs(obj.vy);
+          obj.vy = -Math.abs(obj.vy) * 0.9;
         }
 
         const el = itemRefs.current[index];
