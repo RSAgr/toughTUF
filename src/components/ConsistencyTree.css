@@ -27,12 +27,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(245, 127, 23, 0.2);
 }
 
 .consistency-header h3 {
   margin: 0;
+  flex: 1;
   font-size: 1rem;
   font-weight: 700;
   color: var(--tuf-black);
@@ -43,9 +45,10 @@
 .consistency-level {
   background: linear-gradient(135deg, var(--tuf-orange), var(--tuf-orange-strong));
   color: var(--tuf-white);
-  padding: 4px 12px;
+  padding: 4px 9px;
+  max-width: 138px;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-align: center;
