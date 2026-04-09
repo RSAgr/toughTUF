@@ -48,6 +48,8 @@
   font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.2;
 }
 
 /* Tree Visualization */
@@ -55,22 +57,31 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
-  background: radial-gradient(ellipse at center, rgba(245, 127, 23, 0.05) 0%, transparent 70%);
-  border-radius: 8px;
-  min-height: 200px;
+  padding: 15px 0;
+  background: linear-gradient(180deg, rgba(200, 230, 201, 0.1) 0%, rgba(129, 199, 132, 0.08) 100%);
+  border-radius: 12px;
+  min-height: 140px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tree-visualization::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(245, 127, 23, 0.02) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .tree-svg {
   width: 120px;
-  height: 180px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-/* Tree Trunk */
-.tree-trunk {
-  fill: #8B6F47;
-  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
+  height: 140px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
+  position: relative;
+  z-index: 1;
 }
 
 /* Tree Roots */
@@ -79,13 +90,144 @@
   stroke-width: 2;
   stroke-linecap: round;
   opacity: 0.7;
+  transition: all 0.5s ease-out;
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
 }
 
-/* Tree Foliage - grows in segments */
-.tree-foliage {
-  fill: var(--tuf-orange);
-  transition: opacity 0.4s ease-out;
-  filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.15));
+/* Tree Elements - Universal Styles */
+.tree-seed,
+.seedling-trunk,
+.seedling,
+.plant-trunk,
+.plant-top,
+.plant-mid,
+.bigger-plant-trunk,
+.bigger-plant-1,
+.bigger-plant-2,
+.bigger-plant-3,
+.tree-trunk-full,
+.tree-1,
+.tree-2,
+.tree-3,
+.bigger-tree-trunk,
+.bigger-tree-1,
+.bigger-tree-2,
+.bigger-tree-3,
+.bigger-tree-4,
+.full-tree-trunk,
+.full-tree-1,
+.full-tree-2,
+.full-tree-3,
+.full-tree-4 {
+  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              fill 0.5s ease-out,
+              filter 0.5s ease-out;
+}
+
+/* Tree Elements - Seed Stage */
+.tree-seed {
+  animation: seedPulse 2s ease-in-out infinite;
+}
+
+.tree-seed.active {
+  opacity: 1;
+}
+
+.tree-seed.hidden {
+  opacity: 0;
+}
+
+@keyframes seedPulse {
+  0%, 100% { filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.15)); }
+  50% { filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.25)); }
+}
+
+/* Tree Elements - Seedling Stage */
+.seedling-trunk.active,
+.seedling.active {
+  opacity: 1;
+}
+
+.seedling-trunk.hidden,
+.seedling.hidden {
+  opacity: 0;
+}
+
+/* Tree Elements - Plant Stage */
+.plant-trunk.active,
+.plant-top.active,
+.plant-mid.active {
+  opacity: 1;
+}
+
+.plant-trunk.hidden,
+.plant-top.hidden,
+.plant-mid.hidden {
+  opacity: 0;
+}
+
+/* Tree Elements - Bigger Plant Stage */
+.bigger-plant-trunk.active,
+.bigger-plant-1.active,
+.bigger-plant-2.active,
+.bigger-plant-3.active {
+  opacity: 1;
+}
+
+.bigger-plant-trunk.hidden,
+.bigger-plant-1.hidden,
+.bigger-plant-2.hidden,
+.bigger-plant-3.hidden {
+  opacity: 0;
+}
+
+/* Tree Elements - Tree Stage */
+.tree-trunk-full.active,
+.tree-1.active,
+.tree-2.active,
+.tree-3.active {
+  opacity: 1;
+}
+
+.tree-trunk-full.hidden,
+.tree-1.hidden,
+.tree-2.hidden,
+.tree-3.hidden {
+  opacity: 0;
+}
+
+/* Tree Elements - Bigger Tree Stage */
+.bigger-tree-trunk.active,
+.bigger-tree-1.active,
+.bigger-tree-2.active,
+.bigger-tree-3.active,
+.bigger-tree-4.active {
+  opacity: 1;
+}
+
+.bigger-tree-trunk.hidden,
+.bigger-tree-1.hidden,
+.bigger-tree-2.hidden,
+.bigger-tree-3.hidden,
+.bigger-tree-4.hidden {
+  opacity: 0;
+}
+
+/* Tree Elements - Full Tree Stage */
+.full-tree-trunk.active,
+.full-tree-1.active,
+.full-tree-2.active,
+.full-tree-3.active,
+.full-tree-4.active {
+  opacity: 1;
+}
+
+.full-tree-trunk.hidden,
+.full-tree-1.hidden,
+.full-tree-2.hidden,
+.full-tree-3.hidden,
+.full-tree-4.hidden {
+  opacity: 0;
 }
 
 /* Consistency Stats */
@@ -95,6 +237,10 @@
   background: rgba(245, 127, 23, 0.08);
   border-radius: 6px;
   border-left: 3px solid var(--tuf-orange);
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .consistency-message {
@@ -104,6 +250,7 @@
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1.4;
+  overflow: hidden;
 }
 
 /* Buttons */
@@ -114,7 +261,7 @@
 }
 
 .btn-grow,
-.btn-shrink {
+.btn-reset {
   padding: 10px 14px;
   border: 2px solid;
   border-radius: 6px;
@@ -122,6 +269,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -137,15 +285,38 @@
   box-shadow: 0 2px 6px rgba(245, 127, 23, 0.3);
 }
 
-.btn-grow:hover {
+.btn-grow:hover:not(:disabled) {
   background: var(--tuf-orange-strong);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(245, 127, 23, 0.4);
 }
 
-.btn-grow:active {
+.btn-grow:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 4px rgba(245, 127, 23, 0.3);
+}
+
+.btn-grow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-reset {
+  background: #FF6B6B;
+  color: var(--tuf-white);
+  border-color: #E53E3E;
+  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+}
+
+.btn-reset:hover {
+  background: #E53E3E;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.btn-reset:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
 }
 
 .btn-shrink {

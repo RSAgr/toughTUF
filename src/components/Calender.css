@@ -679,7 +679,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .right-sidebar {
@@ -687,6 +687,11 @@
   flex-direction: column;
   gap: 16px;
   width: 280px;
+  height: 100%;
+}
+
+.right-sidebar .consistency-card {
+  flex: 1;
 }
 
 .motivation-card {
