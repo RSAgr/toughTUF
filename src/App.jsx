@@ -16,7 +16,7 @@ const baseCompanies = [
   "Samsung",
 ];
 
-const floatingCompanies = Array.from({ length: 30 }, (_, index) => {
+const floatingCompanies = Array.from({ length: 18 }, (_, index) => {
   const label = baseCompanies[index % baseCompanies.length];
   return { id: `${label}-${index}`, label };
 });
@@ -87,18 +87,35 @@ function App() {
       const height = window.innerHeight;
       const marginX = Math.max(18, width * 0.03);
       const marginY = Math.max(18, height * 0.03);
+      const columns = 6;
+      const rows = 3;
+      const availableWidth = Math.max(1, width - marginX * 2);
+      const availableHeight = Math.max(1, height - marginY * 2);
+      const cellWidth = availableWidth / columns;
+      const cellHeight = availableHeight / rows;
 
-      objectsRef.current = floatingCompanies.map((company) => {
+      objectsRef.current = floatingCompanies.map((company, index) => {
         const speedX = randomBetween(-0.65, 0.65) || 0.34;
         const speedY = randomBetween(-0.55, 0.55) || -0.3;
         const size = 24 + company.label.length * 2.4;
-        let x = randomBetween(marginX, Math.max(marginX + 1, width - marginX));
-        let y = randomBetween(marginY, Math.max(marginY + 1, height - marginY));
 
-        for (let attempt = 0; attempt < 18; attempt += 1) {
-          if (!isInsideCenterZone(x, y, size, width, height)) break;
-          x = randomBetween(marginX, Math.max(marginX + 1, width - marginX));
-          y = randomBetween(marginY, Math.max(marginY + 1, height - marginY));
+        const column = index % columns;
+        const row = Math.floor(index / columns);
+        let x = marginX + cellWidth * (column + 0.5) + randomBetween(-cellWidth * 0.18, cellWidth * 0.18);
+        let y = marginY + cellHeight * (row + 0.5) + randomBetween(-cellHeight * 0.18, cellHeight * 0.18);
+
+        x = Math.max(marginX, Math.min(width - marginX, x));
+        y = Math.max(marginY, Math.min(height - marginY, y));
+
+        if (isInsideCenterZone(x, y, size, width, height)) {
+          const zone = getCenterZone(width, height);
+          const dx = x - zone.cx;
+          const dy = y - zone.cy;
+          const distance = Math.hypot(dx, dy) || 1;
+          const nx = dx / distance;
+          const ny = dy / distance;
+          x = Math.max(marginX, Math.min(width - marginX, x + nx * (zone.rx * 0.75)));
+          y = Math.max(marginY, Math.min(height - marginY, y + ny * (zone.ry * 0.75)));
         }
 
         return {

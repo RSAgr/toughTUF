@@ -3,15 +3,11 @@ import "./ConsistencyTree.css";
 
 export default function ConsistencyTree() {
   // Tree stages: 0=seed, 1=seedling, 2=plant, 3=bigger plant, 4=tree, 5=bigger tree, 6=full tree
-  const [treeStage, setTreeStage] = useState(0);
-
-  // Load tree stage from localStorage on mount
-  useEffect(() => {
+  const [treeStage, setTreeStage] = useState(() => {
     const saved = localStorage.getItem("treeStage");
-    if (saved) {
-      setTreeStage(Math.max(0, Math.min(6, parseInt(saved, 10))));
-    }
-  }, []);
+    if (!saved) return 0;
+    return Math.max(0, Math.min(6, parseInt(saved, 10)));
+  });
 
   // Save to localStorage whenever tree stage changes
   useEffect(() => {
@@ -27,9 +23,15 @@ export default function ConsistencyTree() {
   };
 
   // Stage names for display
-  //const stageNames = ["Seed", "Seedling", "Plant", "Bigger Plant", "Tree", "Bigger Tree", "Full Tree"];
-  const stageNames = ["Give Me Some Sunshine", "Give Me Some Sunshine", "Give Me Some Sunshinee", "Give Me Some Sunshine", "Give Me Some Sunshinee", "Give Me Some Sunshine", "Give Me Some Sunshine"];
-  // Please don't judge me, earlier I wanted (and maybe even in future) I want to have some fun with stage names, but then I thought it might be better to keep it simple and focused on the core message of nurturing consistency. So I went with a consistent "Give Me Some Sunshine" theme to emphasize the idea that every stage of growth requires care and attention (also, to our fav 3idiots - I hate JEE). But who knows, maybe in future updates I'll add some playful variations to the stage names! For now, it's all about encouraging users to keep watering their consistency tree and watch it grow.
+  const stageNames = [
+    "Give me Some Sunshine",
+    "Give me Some Sunshine",
+    "Give me Some Sunshine",
+    "Give me Some Sunshine",
+    "Give me Some Sunshine",
+    "Give me Some Sunshine",
+    "Give me Some Sunshine",
+  ];
 
   return (
     <div className="consistency-card">
@@ -189,22 +191,22 @@ export default function ConsistencyTree() {
 
       <div className="consistency-stats">
         <p className="consistency-message">
-          {treeStage === 0 && "🌱 Plant your tree! Start with a seed."}
-          {treeStage === 1 && "🌱 A seedling sprouts! Keep going!"}
-          {treeStage === 2 && "🌿 Your plant grows! Stay consistent."}
-          {treeStage === 3 && "🌿 Growing stronger! Don't stop now."}
-          {treeStage === 4 && "🌳 A beautiful tree emerges!"}
-          {treeStage === 5 && "🌳 Your tree stands tall and mighty!"}
-          {treeStage === 6 && "🌲 Your tree has reached its full glory!"}
+          {treeStage === 0 && "Plant your tree. Start with a seed."}
+          {treeStage === 1 && "A seedling has started growing."}
+          {treeStage === 2 && "Your plant is growing steadily."}
+          {treeStage === 3 && "The tree is getting stronger."}
+          {treeStage === 4 && "A healthy tree is taking shape."}
+          {treeStage === 5 && "The tree is standing tall now."}
+          {treeStage === 6 && "The tree has reached full growth."}
         </p>
       </div>
 
       <div className="consistency-buttons">
         <button className="btn-reset" onClick={resetToSeed} title="Reset to seed (break in consistency)">
-          🔄 Reset to Seed
+          Reset to Seed
         </button>
         <button className="btn-grow" onClick={grow} title="Grow your consistency tree" disabled={treeStage === 6}>
-          ↑ Grow
+          Grow
         </button>
       </div>
     </div>

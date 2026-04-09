@@ -10,6 +10,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
+  animation: shad-enter-card 520ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .consistency-card::before {
@@ -30,6 +31,8 @@
   gap: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(245, 127, 23, 0.2);
+  animation: shad-enter-up 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 80ms;
 }
 
 .consistency-header h3 {
@@ -53,6 +56,8 @@
   letter-spacing: 0.04em;
   text-align: center;
   line-height: 1.2;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 6px 18px rgba(234, 88, 12, 0.28);
+  animation: shad-badge-glow 2.8s ease-in-out infinite;
 }
 
 /* Tree Visualization */
@@ -66,6 +71,8 @@
   min-height: 140px;
   position: relative;
   overflow: hidden;
+  animation: shad-enter-zoom 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 130ms;
 }
 
 .tree-visualization::before {
@@ -244,6 +251,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: shad-enter-up 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 180ms;
 }
 
 .consistency-message {
@@ -265,6 +274,8 @@
 
 .btn-grow,
 .btn-reset {
+  position: relative;
+  overflow: hidden;
   padding: 10px 14px;
   border: 2px solid;
   border-radius: 6px;
@@ -279,6 +290,31 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  animation: shad-enter-up 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.btn-grow::before,
+.btn-reset::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(115deg, transparent 28%, rgba(255, 255, 255, 0.36) 48%, transparent 68%);
+  transform: translateX(-130%);
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn-grow:hover::before,
+.btn-reset:hover::before {
+  transform: translateX(130%);
+}
+
+.btn-grow {
+  animation-delay: 230ms;
+}
+
+.btn-reset {
+  animation-delay: 270ms;
 }
 
 .btn-grow {
@@ -338,6 +374,49 @@
   transform: translateY(0);
 }
 
+@keyframes shad-enter-card {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shad-enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shad-enter-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shad-badge-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16), 0 6px 18px rgba(234, 88, 12, 0.24);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24), 0 10px 24px rgba(234, 88, 12, 0.34);
+  }
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   /* Removed broken media query section */
@@ -359,6 +438,23 @@
     padding: 16px 0;
   }
 
+
+@media (prefers-reduced-motion: reduce) {
+  .consistency-card,
+  .consistency-header,
+  .tree-visualization,
+  .consistency-stats,
+  .btn-grow,
+  .btn-reset,
+  .consistency-level {
+    animation: none !important;
+  }
+
+  .btn-grow::before,
+  .btn-reset::before {
+    transition: none;
+  }
+}
   .tree-svg {
     width: 100px;
     height: 150px;
